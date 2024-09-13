@@ -1,4 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import WelcomeScreen from '../Screens/Welcome';
 import LoginScreen from '../Screens/Login';
 import SignupScreen from '../Screens/Signup';
@@ -12,7 +13,7 @@ import SupportScreen from '../Screens/Support';
 // import SupportScreen from '../Screens/Support';
 
 const Stack = createStackNavigator();
-
+const Tab = createBottomTabNavigator()
 const AppNavigator = () => (
     <Stack.Navigator initialRouteName="Welcome">
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
