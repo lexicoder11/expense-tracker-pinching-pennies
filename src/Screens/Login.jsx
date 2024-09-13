@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import Header from '../Components/Header';
 import Button from '../Components/Button';
 
 const LoginScreen = ({ navigation }) => {
@@ -55,6 +54,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginBottom: 5,
         color: '#333',
+        alignSelf: 'flex-start',
     },
     input: {
         height: 40,
