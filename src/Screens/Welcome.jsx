@@ -5,9 +5,8 @@ import { useFonts } from 'expo-font';
 
 const WelcomeScreen = ({ navigation }) => {
     const [fontsLoaded] = useFonts({
-        'Raleway': require('/Users/lexi/Documents/expense-tracker-pinching-pennies/assets/Fonts/Raleway-Regular.ttf')
+        'Raleway': require('/Users/lexi/Documents/expense-tracker-pinching-pennies/assets/Fonts/Raleway-Regular.ttf'),
     });
-
 
     if (!fontsLoaded) {
         return (
@@ -19,12 +18,13 @@ const WelcomeScreen = ({ navigation }) => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <Text style={styles.welcomeText}>Welcome to</Text>
+            <Text style={styles.titleText}>Pinching Pennies!</Text>
 
-            <Text style={styles.welcomeText}>Welcome to Pinching Pennies</Text>
-
-            <Button title="Login" onPress={() => navigation.navigate('Login')} />
-            <Button title="Signup" onPress={() => navigation.navigate('Signup')} />
-
+            <View style={styles.buttonContainer}>
+                <Button title="Login" onPress={() => navigation.navigate('Login')} />
+                <Button title="Signup" onPress={() => navigation.navigate('Signup')} />
+            </View>
         </SafeAreaView>
     );
 };
@@ -40,9 +40,24 @@ const styles = StyleSheet.create({
     welcomeText: {
         fontSize: 24,
         color: '#FFFFFF',
-        fontFamily: 'Raleway-Regular',
-        marginBottom: 400,
+        fontFamily: 'Raleway',
+        marginBottom: 10,
+    },
+    titleText: {
+        fontSize: 36,
+        color: '#FFFFFF',
+        fontFamily: 'Raleway',
+        marginBottom: 50,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center', // Center buttons with less space
+        width: '100%',
+        paddingHorizontal: 20,
+        gap: 10, // Adding gap to reduce space between buttons
     },
 });
 
 export default WelcomeScreen;
+
+
