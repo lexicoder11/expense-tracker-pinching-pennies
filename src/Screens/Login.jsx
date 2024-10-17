@@ -6,28 +6,36 @@ import {
     TouchableOpacity,
     StyleSheet,
     Alert,
-    Animated
+    Animated,
 } from 'react-native';
 import Button from '../Components/Button';
+import { AuthenticationDetails, CognitoUser } from 'amazon-cognito-identity-js';
+
+// Hard-code your Cognito User Pool configuration
+const poolData = {
+    UserPoolId: 'us-west-2_AMexENVv6', // Replace with your User Pool ID
+    ClientId: '51dvqq4pk0s3nbj8n3835q3fgf', // Replace with your App Client ID
+};
+const userPool = new CognitoUserPool(poolData);
 
 const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     // Animated values for fade and zoom
-    const fadeAnim = useRef(new Animated.Value(0)).current; // Start invisible
-    const scaleAnim = useRef(new Animated.Value(0.8)).current; // Start smaller
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+    const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
     // Trigger animation when the component mounts
     useEffect(() => {
         Animated.parallel([
             Animated.timing(fadeAnim, {
-                toValue: 1, // Fully visible
+                toValue: 1,
                 duration: 1000,
                 useNativeDriver: true,
             }),
             Animated.spring(scaleAnim, {
-                toValue: 1, // Back to full size
+                toValue: 1,
                 friction: 5,
                 useNativeDriver: true,
             }),
@@ -39,13 +47,32 @@ const LoginScreen = ({ navigation }) => {
             Alert.alert('Error', 'Please fill in all fields');
             return;
         }
-        Alert.alert('Success', 'Logged in successfully');
-        navigation.navigate('Welcome');
+
+        const authDetails = new AuthenticationDetails({
+            Username: email,
+            Password: password,
+        });
+
+        const user = new CognitoUser({
+            Username: email,
+            Pool: userPool,
+        });
+
+        user.authenticateUser(authDetails, {
+            onSuccess: (result) => {
+                const accessToken = result.getAccessToken().getJwtToken();
+                Alert.alert('Success', 'Logged in successfully!');
+                console.log('Access Token:', accessToken);
+                navigation.navigate('Welcome');
+            },
+            onFailure: (err) => {
+                Alert.alert('Error', err.message || JSON.stringify(err));
+            },
+        });
     };
 
     return (
         <View style={styles.container}>
-            {/* Animated Title */}
             <Animated.Text
                 style={[styles.title, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}
             >

@@ -8,7 +8,15 @@ import {
     StyleSheet,
     Animated,
 } from 'react-native';
-import Button from '../Components/Button'; // Ensure Button is properly imported
+import Button from '../Components/Button';
+import { CognitoUserAttribute } from 'amazon-cognito-identity-js';
+
+// Hard-code your Cognito User Pool configuration
+const poolData = {
+    UserPoolId: 'us-west-2_AMexENVv6', // Replace with your User Pool ID
+    ClientId: '51dvqq4pk0s3nbj8n3835q3fgf', // Replace with your App Client ID
+};
+const userPool = new CognitoUserPool(poolData);
 
 const SignupScreen = ({ navigation }) => {
     const [username, setUsername] = useState('');
@@ -16,8 +24,8 @@ const SignupScreen = ({ navigation }) => {
     const [password, setPassword] = useState('');
 
     // Animated values for fade-in and zoom effects
-    const fadeAnim = useRef(new Animated.Value(0)).current; // Start invisible
-    const scaleAnim = useRef(new Animated.Value(0.8)).current; // Start smaller
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+    const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
     // Run animation on component mount
     useEffect(() => {
@@ -36,12 +44,32 @@ const SignupScreen = ({ navigation }) => {
     }, []);
 
     const handleSignUp = () => {
-        if (!username || !email || !password) {
-            Alert.alert('Error', 'Please fill in all fields');
+        if (!email || !password) {
+            Alert.alert('Error', 'Email and password are required.');
             return;
         }
-        Alert.alert('Success', 'Account created successfully!');
-        navigation.navigate('Welcome');
+
+        // Prepare the attribute list for sign-up
+        const attributeList = [
+            new CognitoUserAttribute({ Name: 'email', Value: email }),
+        ];
+
+        // If a username is provided, add it as a custom attribute
+        if (username) {
+            attributeList.push(
+                new CognitoUserAttribute({ Name: 'custom:username', Value: username })
+            );
+        }
+
+        // Sign the user up using Cognito
+        userPool.signUp(email, password, attributeList, null, (err, result) => {
+            if (err) {
+                Alert.alert('Error', err.message || JSON.stringify(err));
+                return;
+            }
+            Alert.alert('Success', 'Account created successfully!');
+            navigation.navigate('Login'); // Redirect to Login on success
+        });
     };
 
     return (
@@ -58,7 +86,7 @@ const SignupScreen = ({ navigation }) => {
             <Animated.View
                 style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }}
             >
-                <Text style={styles.label}>Username</Text>
+                <Text style={styles.label}>Username (Optional)</Text>
                 <TextInput
                     style={styles.input}
                     value={username}
@@ -158,6 +186,7 @@ const styles = StyleSheet.create({
 });
 
 export default SignupScreen;
+
 
 
 
