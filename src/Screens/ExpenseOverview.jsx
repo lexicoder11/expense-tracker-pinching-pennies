@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import Header from '../Components/Header';
-import { expensesData } from '../data/expenses'; // Assuming you have some sample data
+// import { expensesData } from '../data/expenses'; // Assuming you have some sample data
 
 const ExpenseOverviewScreen = ({ navigation }) => {
     const renderExpenseItem = ({ item }) => (

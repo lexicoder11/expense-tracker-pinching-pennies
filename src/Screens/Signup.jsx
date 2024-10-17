@@ -23,21 +23,19 @@ const SignupScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    // Animated values for fade-in and zoom effects
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
-    // Run animation on component mount
     useEffect(() => {
         Animated.parallel([
             Animated.timing(fadeAnim, {
-                toValue: 1, // Fully visible
+                toValue: 1,
                 duration: 800,
                 useNativeDriver: true,
             }),
             Animated.spring(scaleAnim, {
-                toValue: 1, // Full size
-                friction: 5, // Adds smooth bounce
+                toValue: 1,
+                friction: 5,
                 useNativeDriver: true,
             }),
         ]).start();
@@ -57,29 +55,22 @@ const SignupScreen = ({ navigation }) => {
             );
         }
 
-        // Sign the user up using Cognito
         userPool.signUp(email, password, attributeList, null, (err, result) => {
             if (err) {
-                console.error('Signup Error:', err); // Log the error to the console
+                console.error('Signup Error:', err);
                 Alert.alert('Signup Failed', err.message || JSON.stringify(err));
                 return;
             }
 
-            console.log('Signup Result:', result); // Log success response
-            Alert.alert('Success', 'Account created successfully!');
+            Alert.alert('Success', 'Account created! Please verify your email.');
 
-            navigation.navigate('Login'); // Redirect to Login on success
+            navigation.navigate('ConfirmSignup', { email }); // Redirect to ConfirmSignup with email
         });
     };
 
     return (
         <View style={styles.container}>
-            <Animated.Text
-                style={[
-                    styles.title,
-                    { opacity: fadeAnim, transform: [{ scale: scaleAnim }] },
-                ]}
-            >
+            <Animated.Text style={[styles.title, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}>
                 Create an Account
             </Animated.Text>
 
@@ -103,6 +94,8 @@ const SignupScreen = ({ navigation }) => {
                     placeholder="Enter your email"
                     keyboardType="email-address"
                     placeholderTextColor="#aaa"
+                    autoCapitalize="none"
+                    autoCorrect={false}
                 />
             </Animated.View>
 
@@ -115,17 +108,14 @@ const SignupScreen = ({ navigation }) => {
                     placeholder="Enter your password"
                     secureTextEntry
                     placeholderTextColor="#aaa"
+                    autoCapitalize="none"
+                    autoCorrect={false}
                 />
             </Animated.View>
 
-            <Animated.View style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }}>
-                <Button title="Sign Up" onPress={handleSignUp} />
-            </Animated.View>
+            <Button title="Sign Up" onPress={handleSignUp} />
 
-            <TouchableOpacity
-                onPress={() => navigation.navigate('Login')}
-                style={styles.link}
-            >
+            <TouchableOpacity onPress={() => navigation.navigate('Login')} style={styles.link}>
                 <Text style={styles.linkText}>Already have an account? Login</Text>
             </TouchableOpacity>
         </View>
@@ -133,51 +123,16 @@ const SignupScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        padding: 20,
-        backgroundColor: '#FFF',
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 30,
-        textAlign: 'center',
-        color: '#333',
-    },
-    label: {
-        fontSize: 16,
-        marginBottom: 5,
-        color: '#333',
-        alignSelf: 'flex-start',
-        width: '100%',
-        borderBottomWidth: 2,
-        borderBottomColor: '#007bff',
-        paddingBottom: 5,
-    },
-    input: {
-        width: '100%',
-        height: 50,
-        borderColor: '#ddd',
-        borderWidth: 1,
-        borderRadius: 25,
-        marginBottom: 15,
-        paddingHorizontal: 15,
-        backgroundColor: '#f9f9f9',
-        fontSize: 16,
-    },
-    link: {
-        marginTop: 15,
-    },
-    linkText: {
-        color: '#007bff',
-        fontSize: 16,
-        textAlign: 'center',
-    },
+    container: { flex: 1, justifyContent: 'center', padding: 20, backgroundColor: '#FFF' },
+    title: { fontSize: 24, fontWeight: 'bold', marginBottom: 30, textAlign: 'center', color: '#333' },
+    label: { fontSize: 16, marginBottom: 5, color: '#333', borderBottomWidth: 2, paddingBottom: 5 },
+    input: { height: 50, borderColor: '#ddd', borderWidth: 1, borderRadius: 25, paddingHorizontal: 15 },
+    link: { marginTop: 15 },
+    linkText: { color: '#007bff', fontSize: 16, textAlign: 'center' },
 });
 
 export default SignupScreen;
+
 
 
 

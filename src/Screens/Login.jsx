@@ -9,7 +9,7 @@ import {
     Animated,
 } from 'react-native';
 import Button from '../Components/Button';
-import { AuthenticationDetails, CognitoUser, CognitoUserPool } from 'amazon-cognito-identity-js'; // Ensure imports
+import { AuthenticationDetails, CognitoUser, CognitoUserPool } from 'amazon-cognito-identity-js';
 
 // Hard-code your Cognito User Pool configuration
 const poolData = {
@@ -61,24 +61,34 @@ const LoginScreen = ({ navigation }) => {
         user.authenticateUser(authDetails, {
             onSuccess: (result) => {
                 const accessToken = result.getAccessToken().getJwtToken();
-                console.log('Access Token:', accessToken); // Log for debugging
+                console.log('Access Token:', accessToken); // Debugging log
+
                 Alert.alert('Success', 'Logged in successfully!');
-                navigation.navigate('Welcome');
+
+                // Navigate to Tabs (Main App) and reset the navigation stack
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'MainTabs' }],
+                });
             },
             onFailure: (err) => {
-                console.error('Login Error:', err); // Log error to console
-                Alert.alert('Login Failed', err.message || 'An unknown error occurred.');
+                console.error('Login Error:', err);
+                if (err.code === 'UserNotConfirmedException') {
+                    Alert.alert(
+                        'Account Not Verified',
+                        'Your account is not confirmed. Please enter the confirmation code sent to your email.'
+                    );
+                    navigation.navigate('ConfirmSignup'); // Redirect to ConfirmSignup page
+                } else {
+                    Alert.alert('Login Failed', err.message || 'An unknown error occurred.');
+                }
             },
             newPasswordRequired: (userAttributes) => {
-                // If a new password is required, handle it here
                 delete userAttributes.email_verified; // Remove read-only attributes
-                console.log('New Password Required:', userAttributes);
-                Alert.alert('Error', 'New password required. Please reset your password.');
+                Alert.alert('New Password Required', 'Please reset your password.');
             },
             mfaRequired: (challengeName, challengeParameters) => {
-                // If MFA is required, handle it here
-                console.log('MFA Required:', challengeName, challengeParameters);
-                Alert.alert('Error', 'Multi-factor authentication required.');
+                Alert.alert('MFA Required', 'Multi-factor authentication required.');
             },
         });
     };
@@ -99,6 +109,8 @@ const LoginScreen = ({ navigation }) => {
                     onChangeText={setEmail}
                     placeholder="Enter your email"
                     keyboardType="email-address"
+                    autoCapitalize="none"
+                    autoCorrect={false}
                 />
             </Animated.View>
 
@@ -110,6 +122,8 @@ const LoginScreen = ({ navigation }) => {
                     onChangeText={setPassword}
                     placeholder="Enter your password"
                     secureTextEntry
+                    autoCapitalize="none"
+                    autoCorrect={false}
                 />
             </Animated.View>
 
@@ -173,5 +187,7 @@ const styles = StyleSheet.create({
 });
 
 export default LoginScreen;
+
+
 
 
