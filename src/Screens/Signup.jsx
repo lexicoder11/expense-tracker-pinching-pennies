@@ -10,11 +10,12 @@ import {
 } from 'react-native';
 import Button from '../Components/Button'; // Ensure Button is properly imported
 
-const LoginScreen = ({ navigation }) => {
+const SignupScreen = ({ navigation }) => {
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    // Animated values for fade and zoom effects
+    // Animated values for fade-in and zoom effects
     const fadeAnim = useRef(new Animated.Value(0)).current; // Start invisible
     const scaleAnim = useRef(new Animated.Value(0.8)).current; // Start smaller
 
@@ -34,12 +35,12 @@ const LoginScreen = ({ navigation }) => {
         ]).start();
     }, []);
 
-    const handleLogin = () => {
-        if (!email || !password) {
+    const handleSignUp = () => {
+        if (!username || !email || !password) {
             Alert.alert('Error', 'Please fill in all fields');
             return;
         }
-        Alert.alert('Success', 'Logged in successfully');
+        Alert.alert('Success', 'Account created successfully!');
         navigation.navigate('Welcome');
     };
 
@@ -51,8 +52,21 @@ const LoginScreen = ({ navigation }) => {
                     { opacity: fadeAnim, transform: [{ scale: scaleAnim }] },
                 ]}
             >
-                Welcome Back!
+                Create an Account
             </Animated.Text>
+
+            <Animated.View
+                style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }}
+            >
+                <Text style={styles.label}>Username</Text>
+                <TextInput
+                    style={styles.input}
+                    value={username}
+                    onChangeText={setUsername}
+                    placeholder="Enter your username"
+                    placeholderTextColor="#aaa"
+                />
+            </Animated.View>
 
             <Animated.View
                 style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }}
@@ -85,14 +99,14 @@ const LoginScreen = ({ navigation }) => {
             <Animated.View
                 style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }}
             >
-                <Button title="Login" onPress={handleLogin} />
+                <Button title="Sign Up" onPress={handleSignUp} />
             </Animated.View>
 
             <TouchableOpacity
-                onPress={() => navigation.navigate('Signup')}
+                onPress={() => navigation.navigate('Login')}
                 style={styles.link}
             >
-                <Text style={styles.linkText}>Don't have an account? Sign up</Text>
+                <Text style={styles.linkText}>Already have an account? Login</Text>
             </TouchableOpacity>
         </View>
     );
@@ -143,6 +157,7 @@ const styles = StyleSheet.create({
     },
 });
 
-export default LoginScreen;
+export default SignupScreen;
+
 
 
