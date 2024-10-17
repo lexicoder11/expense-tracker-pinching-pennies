@@ -9,7 +9,7 @@ import {
     Animated,
 } from 'react-native';
 import Button from '../Components/Button';
-import { AuthenticationDetails, CognitoUser } from 'amazon-cognito-identity-js';
+import { AuthenticationDetails, CognitoUser, CognitoUserPool } from 'amazon-cognito-identity-js'; // Ensure imports
 
 // Hard-code your Cognito User Pool configuration
 const poolData = {
@@ -43,8 +43,8 @@ const LoginScreen = ({ navigation }) => {
     }, []);
 
     const handleLogin = () => {
-        if (email === '' || password === '') {
-            Alert.alert('Error', 'Please fill in all fields');
+        if (!email || !password) {
+            Alert.alert('Error', 'Please fill in all fields.');
             return;
         }
 
@@ -61,12 +61,24 @@ const LoginScreen = ({ navigation }) => {
         user.authenticateUser(authDetails, {
             onSuccess: (result) => {
                 const accessToken = result.getAccessToken().getJwtToken();
+                console.log('Access Token:', accessToken); // Log for debugging
                 Alert.alert('Success', 'Logged in successfully!');
-                console.log('Access Token:', accessToken);
                 navigation.navigate('Welcome');
             },
             onFailure: (err) => {
-                Alert.alert('Error', err.message || JSON.stringify(err));
+                console.error('Login Error:', err); // Log error to console
+                Alert.alert('Login Failed', err.message || 'An unknown error occurred.');
+            },
+            newPasswordRequired: (userAttributes) => {
+                // If a new password is required, handle it here
+                delete userAttributes.email_verified; // Remove read-only attributes
+                console.log('New Password Required:', userAttributes);
+                Alert.alert('Error', 'New password required. Please reset your password.');
+            },
+            mfaRequired: (challengeName, challengeParameters) => {
+                // If MFA is required, handle it here
+                console.log('MFA Required:', challengeName, challengeParameters);
+                Alert.alert('Error', 'Multi-factor authentication required.');
             },
         });
     };
@@ -161,4 +173,5 @@ const styles = StyleSheet.create({
 });
 
 export default LoginScreen;
+
 

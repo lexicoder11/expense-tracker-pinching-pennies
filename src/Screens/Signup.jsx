@@ -9,12 +9,12 @@ import {
     Animated,
 } from 'react-native';
 import Button from '../Components/Button';
-import { CognitoUserAttribute } from 'amazon-cognito-identity-js';
+import { CognitoUserPool, CognitoUserAttribute } from 'amazon-cognito-identity-js';
 
 // Hard-code your Cognito User Pool configuration
 const poolData = {
-    UserPoolId: 'us-west-2_AMexENVv6', // Replace with your User Pool ID
-    ClientId: '51dvqq4pk0s3nbj8n3835q3fgf', // Replace with your App Client ID
+    UserPoolId: 'us-west-2_AMexENVv6',
+    ClientId: '51dvqq4pk0s3nbj8n3835q3fgf',
 };
 const userPool = new CognitoUserPool(poolData);
 
@@ -49,12 +49,8 @@ const SignupScreen = ({ navigation }) => {
             return;
         }
 
-        // Prepare the attribute list for sign-up
-        const attributeList = [
-            new CognitoUserAttribute({ Name: 'email', Value: email }),
-        ];
+        const attributeList = [new CognitoUserAttribute({ Name: 'email', Value: email })];
 
-        // If a username is provided, add it as a custom attribute
         if (username) {
             attributeList.push(
                 new CognitoUserAttribute({ Name: 'custom:username', Value: username })
@@ -64,10 +60,14 @@ const SignupScreen = ({ navigation }) => {
         // Sign the user up using Cognito
         userPool.signUp(email, password, attributeList, null, (err, result) => {
             if (err) {
-                Alert.alert('Error', err.message || JSON.stringify(err));
+                console.error('Signup Error:', err); // Log the error to the console
+                Alert.alert('Signup Failed', err.message || JSON.stringify(err));
                 return;
             }
+
+            console.log('Signup Result:', result); // Log success response
             Alert.alert('Success', 'Account created successfully!');
+
             navigation.navigate('Login'); // Redirect to Login on success
         });
     };
@@ -83,10 +83,8 @@ const SignupScreen = ({ navigation }) => {
                 Create an Account
             </Animated.Text>
 
-            <Animated.View
-                style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }}
-            >
-                <Text style={styles.label}>Username (Optional)</Text>
+            <Animated.View style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }}>
+                <Text style={styles.label}>Username</Text>
                 <TextInput
                     style={styles.input}
                     value={username}
@@ -96,9 +94,7 @@ const SignupScreen = ({ navigation }) => {
                 />
             </Animated.View>
 
-            <Animated.View
-                style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }}
-            >
+            <Animated.View style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }}>
                 <Text style={styles.label}>Email</Text>
                 <TextInput
                     style={styles.input}
@@ -110,9 +106,7 @@ const SignupScreen = ({ navigation }) => {
                 />
             </Animated.View>
 
-            <Animated.View
-                style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }}
-            >
+            <Animated.View style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }}>
                 <Text style={styles.label}>Password</Text>
                 <TextInput
                     style={styles.input}
@@ -124,9 +118,7 @@ const SignupScreen = ({ navigation }) => {
                 />
             </Animated.View>
 
-            <Animated.View
-                style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }}
-            >
+            <Animated.View style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }}>
                 <Button title="Sign Up" onPress={handleSignUp} />
             </Animated.View>
 
@@ -186,6 +178,7 @@ const styles = StyleSheet.create({
 });
 
 export default SignupScreen;
+
 
 
 
