@@ -4,7 +4,7 @@ import WelcomeScreen from '../Screens/Welcome';
 import LoginScreen from '../Screens/Login';
 import SignupScreen from '../Screens/Signup';
 import ConfirmSignup from '../Screens/ConfirmSignup';
-import Home from '../Screens/Home'; // Home.jsx contains the Tab.Navigator
+// import Home from '../Screens/Home'; // Home.jsx contains the Tab.Navigator
 
 const Stack = createStackNavigator();
 
@@ -15,11 +15,11 @@ const AppNavigator = () => (
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Signup" component={SignupScreen} />
             <Stack.Screen name="ConfirmSignup" component={ConfirmSignup} />
-            <Stack.Screen
+            {/* <Stack.Screen
                 name="Home"
                 component={Home}
                 options={{ headerShown: false }} // Hide the header on the Home screen
-            />
+            /> */}
         </Stack.Navigator>
     </NavigationContainer>
 );

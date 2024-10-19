@@ -118,6 +118,14 @@ const SignupScreen = ({ navigation }) => {
             <TouchableOpacity onPress={() => navigation.navigate('Login')} style={styles.link}>
                 <Text style={styles.linkText}>Already have an account? Login</Text>
             </TouchableOpacity>
+
+            {/* Temporary Test Button to Navigate to ConfirmSignup */}
+            <TouchableOpacity
+                style={styles.testButton}
+                onPress={() => navigation.navigate('ConfirmSignup', { email: 'test@example.com' })}
+            >
+                <Text style={styles.testButtonText}>Test Confirm Signup</Text>
+            </TouchableOpacity>
         </View>
     );
 };
@@ -129,9 +137,19 @@ const styles = StyleSheet.create({
     input: { height: 50, borderColor: '#ddd', borderWidth: 1, borderRadius: 25, paddingHorizontal: 15 },
     link: { marginTop: 15 },
     linkText: { color: '#007bff', fontSize: 16, textAlign: 'center' },
+    testButton: {
+        marginTop: 15,
+        backgroundColor: '#1B263B',
+        borderRadius: 25,
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        alignItems: 'center',
+    },
+    testButtonText: { color: '#FFF', fontSize: 16, fontWeight: '600' },
 });
 
 export default SignupScreen;
+
 
 
 

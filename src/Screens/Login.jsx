@@ -68,7 +68,7 @@ const LoginScreen = ({ navigation }) => {
                 // Navigate to Tabs (Main App) and reset the navigation stack
                 navigation.reset({
                     index: 0,
-                    routes: [{ name: 'MainTabs' }],
+                    routes: [{ name: 'Home' }],
                 });
             },
             onFailure: (err) => {
