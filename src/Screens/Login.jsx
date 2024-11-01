@@ -8,6 +8,7 @@ import {
     Alert,
     Animated,
 } from 'react-native';
+import { CommonActions } from '@react-navigation/native';
 import Button from '../Components/Button';
 import PasswordInput from '../Components/PasswordInput'; // Importing the PasswordInput component
 import { AuthenticationDetails, CognitoUser, CognitoUserPool } from 'amazon-cognito-identity-js';
@@ -67,11 +68,13 @@ const LoginScreen = ({ navigation }) => {
 
                 Alert.alert('Success', 'Logged in successfully!');
 
-                // Navigate to Tabs (Main App) and reset the navigation stack
-                navigation.reset({
-                    index: 0,
-                    routes: [{ name: 'Home' }],
-                });
+                // Use CommonActions.reset to navigate and clear the stack
+                navigation.dispatch(
+                    CommonActions.reset({
+                        index: 0,
+                        routes: [{ name: 'Home' }],
+                    })
+                );
             },
             onFailure: (err) => {
                 console.error('Login Error:', err);
@@ -185,6 +188,7 @@ const styles = StyleSheet.create({
 });
 
 export default LoginScreen;
+
 
 
 

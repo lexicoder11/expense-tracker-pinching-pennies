@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import Button from '../Components/Button';
 import { CognitoUserPool, CognitoUserAttribute } from 'amazon-cognito-identity-js';
+import PasswordInput from '../Components/PasswordInput'; // Import the PasswordInput component
 
 // Hard-code your Cognito User Pool configuration
 const poolData = {
@@ -101,15 +102,10 @@ const SignupScreen = ({ navigation }) => {
 
             <Animated.View style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }}>
                 <Text style={styles.label}>Password</Text>
-                <TextInput
-                    style={styles.input}
+                <PasswordInput
                     value={password}
                     onChangeText={setPassword}
                     placeholder="Enter your password"
-                    secureTextEntry
-                    placeholderTextColor="#aaa"
-                    autoCapitalize="none"
-                    autoCorrect={false}
                 />
             </Animated.View>
 

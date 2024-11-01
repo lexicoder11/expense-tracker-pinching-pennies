@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
-import Header from '../Components/Header';
-// import { expensesData } from '../data/expenses'; // Assuming you have some sample data
+import { View, Text, FlatList, StyleSheet, SafeAreaView } from 'react-native';
+import Button from '../Components/Button'; // Importing the Button component
 
 const ExpenseOverviewScreen = ({ navigation }) => {
     const renderExpenseItem = ({ item }) => (
@@ -12,21 +11,22 @@ const ExpenseOverviewScreen = ({ navigation }) => {
     );
 
     return (
-        <View style={styles.container}>
-            <Header title="Expense Overview" />
+        <SafeAreaView style={styles.container}>
+            <Text style={styles.screenTitle}>Expense Overview</Text>
+
+            {/* Uncomment and update FlatList data source as needed */}
             {/* <FlatList
                 data={expensesData} // Replace this with your actual data source
                 renderItem={renderExpenseItem}
                 keyExtractor={item => item.id.toString()}
                 contentContainerStyle={styles.listContainer}
             /> */}
-            <TouchableOpacity
-                style={styles.addButton}
+
+            <Button
+                title="Add Expense"
                 onPress={() => navigation.navigate('ExpenseAdd')}
-            >
-                <Text style={styles.addButtonText}>Add Expense</Text>
-            </TouchableOpacity>
-        </View>
+            />
+        </SafeAreaView>
     );
 };
 
@@ -35,6 +35,12 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 20,
         backgroundColor: '#FFF',
+    },
+    screenTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 15,
+        textAlign: 'center',
     },
     listContainer: {
         flexGrow: 1,
@@ -56,17 +62,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#333',
     },
-    addButton: {
-        padding: 15,
-        backgroundColor: '#007bff',
-        borderRadius: 5,
-        marginTop: 20,
-        alignItems: 'center',
-    },
-    addButtonText: {
-        color: '#FFF',
-        fontSize: 18,
-    },
 });
 
 export default ExpenseOverviewScreen;
+
+
