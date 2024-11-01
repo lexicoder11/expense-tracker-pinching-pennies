@@ -14,7 +14,7 @@ const ExpenseOverviewScreen = ({ navigation }) => {
         <SafeAreaView style={styles.container}>
             <Text style={styles.screenTitle}>Expense Overview</Text>
 
-            {/* Uncomment and update FlatList data source as needed */}
+
             {/* <FlatList
                 data={expensesData} // Replace this with your actual data source
                 renderItem={renderExpenseItem}
