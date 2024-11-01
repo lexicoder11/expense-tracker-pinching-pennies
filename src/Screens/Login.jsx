@@ -9,6 +9,7 @@ import {
     Animated,
 } from 'react-native';
 import Button from '../Components/Button';
+import PasswordInput from '../Components/PasswordInput'; // Importing the PasswordInput component
 import { AuthenticationDetails, CognitoUser, CognitoUserPool } from 'amazon-cognito-identity-js';
 
 // Hard-code your Cognito User Pool configuration
@@ -42,6 +43,7 @@ const LoginScreen = ({ navigation }) => {
         ]).start();
     }, []);
 
+    // AWS Cognito
     const handleLogin = () => {
         if (!email || !password) {
             Alert.alert('Error', 'Please fill in all fields.');
@@ -116,14 +118,10 @@ const LoginScreen = ({ navigation }) => {
 
             <Animated.View style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }}>
                 <Text style={styles.label}>Password</Text>
-                <TextInput
-                    style={styles.input}
+                <PasswordInput
                     value={password}
                     onChangeText={setPassword}
                     placeholder="Enter your password"
-                    secureTextEntry
-                    autoCapitalize="none"
-                    autoCorrect={false}
                 />
             </Animated.View>
 
@@ -187,6 +185,7 @@ const styles = StyleSheet.create({
 });
 
 export default LoginScreen;
+
 
 
 
