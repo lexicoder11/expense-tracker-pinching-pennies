@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet, SafeAreaView } from 'react-native';
+import { Text, Button, StyleSheet, SafeAreaView } from 'react-native';
 
 const SupportScreen = ({ navigation }) => {
     return (
