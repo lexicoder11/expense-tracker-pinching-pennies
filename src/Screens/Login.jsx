@@ -7,29 +7,45 @@ import {
     StyleSheet,
     Alert,
     Animated,
+    Switch,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CommonActions } from '@react-navigation/native';
 import Button from '../Components/Button';
-import PasswordInput from '../Components/PasswordInput'; // Importing the PasswordInput component
+import PasswordInput from '../Components/PasswordInput';
 import { AuthenticationDetails, CognitoUser, CognitoUserPool } from 'amazon-cognito-identity-js';
 
-// Hard-code your Cognito User Pool configuration
+// Cognito User Pool configuration
 const poolData = {
-    UserPoolId: 'us-west-2_AMexENVv6', // Replace with your User Pool ID
-    ClientId: '51dvqq4pk0s3nbj8n3835q3fgf', // Replace with your App Client ID
+    UserPoolId: 'us-west-2_AMexENVv6',
+    ClientId: '51dvqq4pk0s3nbj8n3835q3fgf',
 };
 const userPool = new CognitoUserPool(poolData);
 
 const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [rememberMe, setRememberMe] = useState(false);
 
     // Animated values for fade and zoom
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
-    // Trigger animation when the component mounts
+    // Load saved email if "Remember Me" was previously checked
     useEffect(() => {
+        const loadSavedEmail = async () => {
+            try {
+                const savedEmail = await AsyncStorage.getItem('rememberedEmail');
+                if (savedEmail) {
+                    setEmail(savedEmail);
+                    setRememberMe(true);
+                }
+            } catch (error) {
+                console.error('Failed to load email', error);
+            }
+        };
+        loadSavedEmail();
+
         Animated.parallel([
             Animated.timing(fadeAnim, {
                 toValue: 1,
@@ -44,11 +60,18 @@ const LoginScreen = ({ navigation }) => {
         ]).start();
     }, []);
 
-    // AWS Cognito
-    const handleLogin = () => {
+    // Handle Login and Remember Me
+    const handleLogin = async () => {
         if (!email || !password) {
             Alert.alert('Error', 'Please fill in all fields.');
             return;
+        }
+
+        // Save or clear the email based on Remember Me
+        if (rememberMe) {
+            await AsyncStorage.setItem('rememberedEmail', email);
+        } else {
+            await AsyncStorage.removeItem('rememberedEmail');
         }
 
         const authDetails = new AuthenticationDetails({
@@ -64,11 +87,9 @@ const LoginScreen = ({ navigation }) => {
         user.authenticateUser(authDetails, {
             onSuccess: (result) => {
                 const accessToken = result.getAccessToken().getJwtToken();
-                console.log('Access Token:', accessToken); // Debugging log
+                console.log('Access Token:', accessToken);
 
                 Alert.alert('Success', 'Logged in successfully!');
-
-                // Use CommonActions.reset to navigate and clear the stack
                 navigation.dispatch(
                     CommonActions.reset({
                         index: 0,
@@ -83,13 +104,13 @@ const LoginScreen = ({ navigation }) => {
                         'Account Not Verified',
                         'Your account is not confirmed. Please enter the confirmation code sent to your email.'
                     );
-                    navigation.navigate('ConfirmSignup'); // Redirect to ConfirmSignup page
+                    navigation.navigate('ConfirmSignup');
                 } else {
                     Alert.alert('Login Failed', err.message || 'An unknown error occurred.');
                 }
             },
             newPasswordRequired: (userAttributes) => {
-                delete userAttributes.email_verified; // Remove read-only attributes
+                delete userAttributes.email_verified;
                 Alert.alert('New Password Required', 'Please reset your password.');
             },
             mfaRequired: (challengeName, challengeParameters) => {
@@ -127,6 +148,17 @@ const LoginScreen = ({ navigation }) => {
                     placeholder="Enter your password"
                 />
             </Animated.View>
+
+            {/* Remember Me Toggle */}
+            <View style={styles.rememberMeContainer}>
+                <Text style={styles.rememberMeText}>Remember Me</Text>
+                <Switch
+                    value={rememberMe}
+                    onValueChange={setRememberMe}
+                    trackColor={{ false: '#767577', true: '#32CD32' }}
+                    thumbColor={rememberMe ? '#ffffff' : '#f4f3f4'}
+                />
+            </View>
 
             <Animated.View style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }}>
                 <Button title="Login" onPress={handleLogin} />
@@ -177,6 +209,17 @@ const styles = StyleSheet.create({
         backgroundColor: '#f9f9f9',
         fontSize: 16,
     },
+    rememberMeContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 10,
+        marginTop: 20,
+    },
+    rememberMeText: {
+        fontSize: 16,
+        color: '#333',
+    },
     link: {
         marginTop: 15,
     },
@@ -188,6 +231,9 @@ const styles = StyleSheet.create({
 });
 
 export default LoginScreen;
+
+
+
 
 
 
