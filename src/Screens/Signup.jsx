@@ -23,6 +23,7 @@ const SignupScreen = ({ navigation }) => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState(''); // New state for phone number
 
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const scaleAnim = useRef(new Animated.Value(0.8)).current;
@@ -53,6 +54,12 @@ const SignupScreen = ({ navigation }) => {
         if (username) {
             attributeList.push(
                 new CognitoUserAttribute({ Name: 'custom:username', Value: username })
+            );
+        }
+
+        if (phoneNumber) { // Add phone number if provided
+            attributeList.push(
+                new CognitoUserAttribute({ Name: 'phone_number', Value: phoneNumber })
             );
         }
 
@@ -109,6 +116,18 @@ const SignupScreen = ({ navigation }) => {
                 />
             </Animated.View>
 
+            <Animated.View style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }}>
+                <Text style={styles.label}>Phone Number (Optional)</Text>
+                <TextInput
+                    style={styles.input}
+                    value={phoneNumber}
+                    onChangeText={setPhoneNumber}
+                    placeholder="Enter phone number with your country area code"
+                    keyboardType="phone-pad"
+                    placeholderTextColor="#aaa"
+                />
+            </Animated.View>
+
             <Button title="Sign Up" onPress={handleSignUp} />
 
             <TouchableOpacity onPress={() => navigation.navigate('Login')} style={styles.link}>
@@ -129,8 +148,21 @@ const SignupScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: { flex: 1, justifyContent: 'center', padding: 20, backgroundColor: '#FFF' },
     title: { fontSize: 24, fontWeight: 'bold', marginBottom: 30, textAlign: 'center', color: '#333' },
-    label: { fontSize: 16, marginBottom: 5, color: '#333', borderBottomWidth: 2, paddingBottom: 5 },
-    input: { height: 50, borderColor: '#ddd', borderWidth: 1, borderRadius: 25, paddingHorizontal: 15 },
+    label: {
+        fontSize: 20,
+        marginBottom: .5,
+        color: '#333',
+        borderBottomWidth: 2,
+        paddingBottom: 5
+    },
+    input: {
+        height: 50,
+        borderColor: '#ddd',
+        borderWidth: 1,
+        borderRadius: 25,
+        paddingHorizontal: 15,
+        marginBottom: 8,
+    },
     link: { marginTop: 15 },
     linkText: { color: '#007bff', fontSize: 16, textAlign: 'center' },
     testButton: {
@@ -145,6 +177,9 @@ const styles = StyleSheet.create({
 });
 
 export default SignupScreen;
+
+
+
 
 
 
