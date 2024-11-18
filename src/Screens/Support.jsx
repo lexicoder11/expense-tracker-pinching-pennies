@@ -5,7 +5,7 @@ const SupportScreen = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.title}>Support</Text>
-            <Text style={styles.info}>If you need assistance, please contact us at support@example.com.</Text>
+            <Text style={styles.info}>If you need assistance, please contact us at pinchingpenniesmm@gmail.com.</Text>
 
 
             <Button
