@@ -32,7 +32,7 @@ const Home = () => (
             tabBarIcon: ({ color, size, focused }) => {
                 let iconName;
 
-                if (route.name === 'Expense') iconName = 'wallet-outline';
+                if (route.name === 'Wallet') iconName = 'wallet-outline';
                 else if (route.name === 'Support') iconName = 'help-circle-outline';
                 else if (route.name === 'Profile') iconName = 'person-outline';
 
@@ -44,7 +44,7 @@ const Home = () => (
             headerShown: false,
         })}
     >
-        <Tab.Screen name="Expense" component={ExpenseScreen} />
+        <Tab.Screen name="Wallet" component={ExpenseScreen} />
         <Tab.Screen name="Support" component={SupportScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>

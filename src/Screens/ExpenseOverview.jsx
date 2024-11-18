@@ -15,12 +15,6 @@ const ExpenseOverviewScreen = ({ navigation }) => {
             <Text style={styles.screenTitle}>Expense Overview</Text>
 
 
-            {/* <FlatList
-                data={expensesData} // Replace this with your actual data source
-                renderItem={renderExpenseItem}
-                keyExtractor={item => item.id.toString()}
-                contentContainerStyle={styles.listContainer}
-            /> */}
 
             <Button
                 title="Add Expense"
