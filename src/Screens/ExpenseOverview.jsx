@@ -13,12 +13,12 @@ const ExpenseOverviewScreen = ({ navigation }) => {
     const [userName, setUserName] = useState('');  // State to store the username
     const [numColumns, setNumColumns] = useState(2); // State to control number of columns
     const [categories, setCategories] = useState([
-        { name: 'Spending', color: '#1B263B', icon: 'wallet' },
-        { name: 'Money Plan', color: '#1B263B', icon: 'calculator' },
-        { name: 'Income', color: '#1B263B', icon: 'cash' },
-        { name: 'Debt', color: '#1B263B', icon: 'card' },
-        { name: 'Savings', color: '#1B263B', icon: 'arrow-up' },
-        { name: 'Goals', color: '#1B263B', icon: 'trophy' },
+        { name: 'Spending', color: '#1B263B', icon: 'wallet', screen: 'SpendingScreen' },
+        { name: 'Money Plan', color: '#1B263B', icon: 'calculator', screen: 'MoneyPlanScreen' },
+        { name: 'Income', color: '#1B263B', icon: 'cash', screen: 'IncomeScreen' },
+        { name: 'Debt', color: '#1B263B', icon: 'card', screen: 'DebtScreen' },
+        { name: 'Savings', color: '#1B263B', icon: 'arrow-up', screen: 'SavingsScreen' },
+        { name: 'Goals', color: '#1B263B', icon: 'trophy', screen: 'GoalsScreen' },
     ]);
     const [filteredCategories, setFilteredCategories] = useState(categories);
     const [searchQuery, setSearchQuery] = useState('');
@@ -98,7 +98,10 @@ const ExpenseOverviewScreen = ({ navigation }) => {
                 keyExtractor={(item, index) => index.toString()}
                 numColumns={numColumns}  // Dynamically set the number of columns
                 renderItem={({ item }) => (
-                    <TouchableOpacity style={[styles.categoryItem, { backgroundColor: item.color }]}>
+                    <TouchableOpacity
+                        style={[styles.categoryItem, { backgroundColor: item.color }]}
+                        onPress={() => navigation.navigate(item.screen)}  // Navigate to the category's specific screen
+                    >
                         <Ionicons name={item.icon} size={24} color="#fff" style={styles.categoryIcon} />
                         <Text style={styles.categoryText}>{item.name}</Text>
                     </TouchableOpacity>
@@ -167,32 +170,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         color: '#28A745',
-    },
-    screenTitle: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 15,
-        textAlign: 'center',
-    },
-    listContainer: {
-        flexGrow: 1,
-    },
-    expenseItem: {
-        padding: 15,
-        marginVertical: 8,
-        marginHorizontal: 16,
-        backgroundColor: '#f9f9f9',
-        borderRadius: 5,
-        borderColor: '#ddd',
-        borderWidth: 1,
-    },
-    expenseTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    expenseAmount: {
-        fontSize: 16,
-        color: '#333',
     },
 });
 
