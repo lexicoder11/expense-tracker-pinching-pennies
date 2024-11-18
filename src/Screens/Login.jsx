@@ -26,6 +26,7 @@ const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
+    const [passwordVisible, setPasswordVisible] = useState(false); // New state to control password visibility
 
     // Animated values for fade and zoom
     const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -105,6 +106,12 @@ const LoginScreen = ({ navigation }) => {
                         'Your account is not confirmed. Please enter the confirmation code sent to your email.'
                     );
                     navigation.navigate('ConfirmSignup');
+                } else if (err.code === 'PasswordResetRequiredException') {
+                    Alert.alert(
+                        'Password Reset Required',
+                        'Your account requires a password reset. Please check your email for the reset code.'
+                    );
+                    navigation.navigate('PasswordReset');
                 } else {
                     Alert.alert('Login Failed', err.message || 'An unknown error occurred.');
                 }
@@ -115,6 +122,36 @@ const LoginScreen = ({ navigation }) => {
             },
             mfaRequired: (challengeName, challengeParameters) => {
                 Alert.alert('MFA Required', 'Multi-factor authentication required.');
+            },
+        });
+    };
+
+    const handleForgotPassword = () => {
+        if (!email) {
+            Alert.alert(
+                'Email Required',
+                'Please enter your email address to reset your password.'
+            );
+            return;
+        }
+
+        const user = new CognitoUser({
+            Username: email,
+            Pool: userPool,
+        });
+
+        user.forgotPassword({
+            onSuccess: (data) => {
+                console.log('Forgot Password Success:', data);
+                Alert.alert(
+                    'Reset Password',
+                    'A password reset code has been sent to your email. Follow the instructions to reset your password.'
+                );
+                navigation.navigate('PasswordReset');
+            },
+            onFailure: (err) => {
+                console.error('Forgot Password Error:', err);
+                Alert.alert('Error', err.message || 'An unknown error occurred.');
             },
         });
     };
@@ -146,7 +183,16 @@ const LoginScreen = ({ navigation }) => {
                     value={password}
                     onChangeText={setPassword}
                     placeholder="Enter your password"
+                    secureTextEntry={!passwordVisible}  // Toggling password visibility
                 />
+                <TouchableOpacity
+                    onPress={() => setPasswordVisible(!passwordVisible)} // Toggle password visibility
+                    style={styles.showPasswordButton}
+                >
+                    <Text style={styles.showPasswordText}>
+                        {passwordVisible ? 'Hide Password' : 'Show Password'}
+                    </Text>
+                </TouchableOpacity>
             </Animated.View>
 
             {/* Remember Me Toggle */}
@@ -162,6 +208,12 @@ const LoginScreen = ({ navigation }) => {
 
             <Animated.View style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }}>
                 <Button title="Login" onPress={handleLogin} />
+            </Animated.View>
+
+            <Animated.View style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }}>
+                <TouchableOpacity onPress={handleForgotPassword} style={styles.link}>
+                    <Text style={styles.linkText}>Forgot Password?</Text>
+                </TouchableOpacity>
             </Animated.View>
 
             <Animated.View style={{ opacity: fadeAnim, transform: [{ scale: scaleAnim }] }}>
@@ -194,10 +246,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginBottom: 5,
         color: '#333',
-        alignSelf: 'flex-start',
-        borderBottomWidth: 2,
-        borderBottomColor: '#007bff',
-        paddingBottom: 5,
     },
     input: {
         height: 50,
@@ -220,6 +268,14 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#333',
     },
+    showPasswordButton: {
+        marginTop: 10,
+        alignItems: 'flex-end',
+    },
+    showPasswordText: {
+        color: '#007bff',
+        fontSize: 14,
+    },
     link: {
         marginTop: 15,
     },
@@ -231,6 +287,10 @@ const styles = StyleSheet.create({
 });
 
 export default LoginScreen;
+
+
+
+
 
 
 
