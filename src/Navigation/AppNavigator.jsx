@@ -5,7 +5,8 @@ import LoginScreen from '../Screens/Login';
 import SignupScreen from '../Screens/Signup';
 import ConfirmSignup from '../Screens/ConfirmSignup';
 import PasswordReset from '../Screens/PasswordReset';
-import Home from '../Screens/Home'; // Home.jsx contains the Tab.Navigator
+import Home from '../Screens/Home';
+import ExpenseOverviewNavigator from './ExpenseOverviewNavigator';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,11 @@ const AppNavigator = () => (
                 name="Home"
                 component={Home}
                 options={{ headerShown: false }} // Hide the header on the Home screen
+            />
+            <Stack.Screen
+                name="ExpenseOverview"
+                component={ExpenseOverviewNavigator}
+                options={{ headerShown: false }}
             />
         </Stack.Navigator>
     </NavigationContainer>

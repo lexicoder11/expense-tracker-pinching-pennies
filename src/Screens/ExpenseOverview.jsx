@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, TextInput, FlatList, TouchableOpacity } from 'react-native';
 import { CognitoUserPool } from 'amazon-cognito-identity-js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import ExpenseOverviewNavigator from '../Navigation/ExpenseOverviewNavigator';
 
 // Hardcoded Cognito User Pool Data
 const poolData = {
