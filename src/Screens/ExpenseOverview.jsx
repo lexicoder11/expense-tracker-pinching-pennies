@@ -13,12 +13,12 @@ const ExpenseOverviewScreen = ({ navigation }) => {
     const [userName, setUserName] = useState('');  // State to store the username
     const [numColumns, setNumColumns] = useState(2); // State to control number of columns
     const [categories, setCategories] = useState([
-        { name: 'Spending', color: '#1B263B', icon: 'wallet', screen: 'SpendingScreen' },
-        { name: 'Money Plan', color: '#1B263B', icon: 'calculator', screen: 'MoneyPlanScreen' },
-        { name: 'Income', color: '#1B263B', icon: 'cash', screen: 'IncomeScreen' },
-        { name: 'Debt', color: '#1B263B', icon: 'card', screen: 'DebtScreen' },
-        { name: 'Savings', color: '#1B263B', icon: 'arrow-up', screen: 'SavingsScreen' },
-        { name: 'Goals', color: '#1B263B', icon: 'trophy', screen: 'GoalsScreen' },
+        { name: 'Spending', color: '#1B263B', icon: 'wallet', screen: 'Spending' },
+        { name: 'Money Plan', color: '#1B263B', icon: 'calculator', screen: 'MoneyPlan' },
+        { name: 'Income', color: '#1B263B', icon: 'cash', screen: 'Income' },
+        { name: 'Debt', color: '#1B263B', icon: 'card', screen: 'Debt' },
+        { name: 'Savings', color: '#1B263B', icon: 'arrow-up', screen: 'Savings' },
+        { name: 'Goals', color: '#1B263B', icon: 'trophy', screen: 'Goals' },
     ]);
     const [filteredCategories, setFilteredCategories] = useState(categories);
     const [searchQuery, setSearchQuery] = useState('');
