@@ -2,17 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, TextInput, FlatList, TouchableOpacity } from 'react-native';
 import { CognitoUserPool } from 'amazon-cognito-identity-js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import ExpenseOverviewNavigator from '../Navigation/ExpenseOverviewNavigator';
 
-// Hardcoded Cognito User Pool Data
 const poolData = {
     UserPoolId: 'us-west-2_AMexENVv6',
     ClientId: '51dvqq4pk0s3nbj8n3835q3fgf',
 };
 
 const ExpenseOverviewScreen = ({ navigation }) => {
-    const [userName, setUserName] = useState('');  // State to store the username
-    const [numColumns, setNumColumns] = useState(2); // State to control number of columns
+    const [userName, setUserName] = useState('');
+    const [numColumns, setNumColumns] = useState(2);
     const [categories, setCategories] = useState([
         { name: 'Spending', color: '#1B263B', icon: 'wallet', screen: 'Spending' },
         { name: 'Money Plan', color: '#1B263B', icon: 'calculator', screen: 'MoneyPlan' },
@@ -24,7 +22,6 @@ const ExpenseOverviewScreen = ({ navigation }) => {
     const [filteredCategories, setFilteredCategories] = useState(categories);
     const [searchQuery, setSearchQuery] = useState('');
 
-    // Handle search query change
     const handleSearch = (query) => {
         setSearchQuery(query);
         const filtered = categories.filter(category =>
@@ -34,16 +31,11 @@ const ExpenseOverviewScreen = ({ navigation }) => {
     };
 
     useEffect(() => {
-        // Initialize the Cognito User Pool
         const userPool = new CognitoUserPool(poolData);
-
-        // Get the current authenticated user
         const currentUser = userPool.getCurrentUser();
 
         if (currentUser) {
             console.log("Current User: ", currentUser);
-
-            // Fetch the user's session
             currentUser.getSession((err, session) => {
                 if (err) {
                     console.error('Session error:', err);
@@ -52,7 +44,6 @@ const ExpenseOverviewScreen = ({ navigation }) => {
 
                 console.log("Session valid:", session);
 
-                // If session is valid, fetch user attributes
                 currentUser.getUserAttributes((err, attributes) => {
                     if (err) {
                         console.error('Error fetching attributes:', err);
@@ -61,13 +52,9 @@ const ExpenseOverviewScreen = ({ navigation }) => {
 
                     console.log("User attributes:", attributes);
 
-                    // Find the custom username attribute
-                    const username =
-                        attributes.find(attr => attr.getName() === 'custom:username')?.getValue() ||
-                        'User';
-
+                    const username = attributes.find(attr => attr.getName() === 'custom:username')?.getValue() || 'User';
                     console.log("Resolved Username:", username);
-                    setUserName(username); // Update state with the username
+                    setUserName(username);
                 });
             });
         } else {
@@ -94,14 +81,19 @@ const ExpenseOverviewScreen = ({ navigation }) => {
 
             {/* Display Filtered Categories */}
             <FlatList
-                key={numColumns} // Add the `key` prop here to trigger re-render when numColumns changes
+                key={numColumns}
                 data={filteredCategories}
                 keyExtractor={(item, index) => index.toString()}
-                numColumns={numColumns}  // Dynamically set the number of columns
+                numColumns={numColumns}
                 renderItem={({ item }) => (
                     <TouchableOpacity
                         style={[styles.categoryItem, { backgroundColor: item.color }]}
-                        onPress={() => navigation.navigate(item.screen)}  // Navigate to the category's specific screen
+                        onPress={() => navigation.navigate('root', {
+                            screen: item.screen, // Navigate to the selected screen
+                            params: {
+                                screen: item.screen, // Specify the actual screen to show
+                            },
+                        })}
                     >
                         <Ionicons name={item.icon} size={24} color="#fff" style={styles.categoryIcon} />
                         <Text style={styles.categoryText}>{item.name}</Text>
@@ -160,7 +152,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         borderWidth: 1,
         borderColor: '#ddd',
-        flex: 1,  // Ensure items fill available space equally
+        flex: 1,
         justifyContent: 'center',
     },
     categoryIcon: {
