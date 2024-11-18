@@ -5,6 +5,7 @@ import { Animated, StyleSheet } from 'react-native';
 import ExpenseScreen from '../Screens/ExpenseOverview';
 import SupportScreen from '../Screens/Support';
 import ProfileScreen from '../Screens/Profile';
+import WelcomeScreen from '../Screens/Welcome';
 
 const Tab = createBottomTabNavigator();
 
@@ -35,6 +36,7 @@ const Home = () => (
                 if (route.name === 'Wallet') iconName = 'wallet-outline';
                 else if (route.name === 'Support') iconName = 'help-circle-outline';
                 else if (route.name === 'Profile') iconName = 'person-outline';
+                else if (route.name === 'Home') iconName = 'home-outline';
 
                 return <TabIcon name={iconName} color={color} size={size} focused={focused} />;
             },
@@ -47,6 +49,7 @@ const Home = () => (
         <Tab.Screen name="Wallet" component={ExpenseScreen} />
         <Tab.Screen name="Support" component={SupportScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
+        <Tab.Screen name="Home" component={WelcomeScreen} />
     </Tab.Navigator>
 );
 
@@ -61,5 +64,6 @@ const styles = StyleSheet.create({
 });
 
 export default Home;
+
 
 
