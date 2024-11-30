@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { View, StyleSheet } from 'react-native';
 import AppNavigator from './src/Navigation/AppNavigator';
 
+
 export default function App() {
   return (
     <View style={styles.container}>

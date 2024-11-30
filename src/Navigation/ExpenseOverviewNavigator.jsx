@@ -24,3 +24,4 @@ const ExpenseOverviewNavigator = () => (
 );
 
 export default ExpenseOverviewNavigator;
+

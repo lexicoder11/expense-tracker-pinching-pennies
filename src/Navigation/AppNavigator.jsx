@@ -1,3 +1,4 @@
+import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import WelcomeScreen from '../Screens/Welcome';
@@ -21,8 +22,9 @@ const AppNavigator = () => (
             <Stack.Screen
                 name="Home"
                 component={Home}
-                options={{ headerShown: false }} // Hide the header on the Home screen
+                options={{ headerShown: false }}
             />
+
             <Stack.Screen
                 name="ExpenseOverview"
                 component={ExpenseOverviewNavigator}
@@ -33,6 +35,7 @@ const AppNavigator = () => (
 );
 
 export default AppNavigator;
+
 
 
 
